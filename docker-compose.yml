@@ -1,0 +1,44 @@
+services:
+  codewiz-pipeline:
+    build: .
+    command: python scripts/main.py
+    volumes:
+      - ./docs:/app/docs
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./vectorstore:/app/vectorstore
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    restart: unless-stopped
+
+  codewiz-interface:
+    build: .
+    command: streamlit run scripts/interface.py --server.address 0.0.0.0 --server.port 8501
+    depends_on:
+      - codewiz-pipeline
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./docs:/app/docs
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./vectorstore:/app/vectorstore
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    restart: unless-stopped
+
+  codewiz-dashboard:
+    build: .
+    command: streamlit run scripts/qa_dashboard.py --server.address 0.0.0.0 --server.port 8502
+    depends_on:
+      - codewiz-interface
+    ports:
+      - "8502:8502"
+    volumes:
+      - ./docs:/app/docs
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./vectorstore:/app/vectorstore
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    restart: unless-stopped

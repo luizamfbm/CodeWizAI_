@@ -1,0 +1,17 @@
+langchain>=0.1.14
+langchain-openai
+langchain-huggingface
+faiss-cpu
+openai
+unstructured
+tiktoken
+pydantic<2.0
+streamlit
+pdf2image
+pytesseract
+python-docx
+Pillow
+langchain-community
+pandas
+pymupdf
+faiss-cpu
